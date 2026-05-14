@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full IOE Mock Test #1 - CodeTMC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .option-selected { border-color: #4f46e5 !important; background: rgba(79, 70, 229, 0.1); }
+        .palette-answered { background-color: #22c55e !important; border-color: #22c55e !important; color: white; }
+        .palette-current { ring: 2px solid #4f46e5; background: rgba(79, 70, 229, 0.2); color: #818cf8; }
+        /* Smooth scrolling for the question area */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#0f172a] text-white min-h-screen flex flex-col overflow-hidden font-sans">
+
+    <!-- Header -->
+    <header class="h-16 border-b border-white/5 bg-[#1e293b]/50 flex items-center justify-between px-8 z-50">
+        <div class="flex items-center gap-4">
+            <a href="engineering-ioe.html" class="hover:bg-white/5 p-2 rounded-lg transition-colors">
+                <i data-lucide="arrow-left" class="size-5"></i>
+            </a>
+            <div>
+                <h2 class="font-bold text-sm md:text-base">Full IOE Mock Test #1</h2>
+                <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Physics • Math • Chem • Eng</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 md:gap-8">
+            <div class="flex items-center gap-2 text-orange-400 bg-orange-400/10 px-3 md:px-4 py-1.5 rounded-full border border-orange-400/20">
+                <i data-lucide="timer" class="size-4"></i>
+                <span id="timer" class="font-mono font-bold text-sm">03:00:00</span>
+            </div>
+            <button onclick="finishTest()" class="bg-indigo-600 hover:bg-indigo-700 px-4 md:px-6 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-indigo-600/20">
+                Submit
+            </button>
+        </div>
+    </header>
+
+    <div class="flex-1 flex overflow-hidden">
+        <!-- Question Section -->
+        <main class="flex-1 overflow-y-auto p-6 md:p-12 custom-scrollbar">
+            <div class="max-w-3xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <span id="q-number" class="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-400/10 px-3 py-1 rounded-full">Question 1 of 100</span>
+                    <button class="text-gray-500 hover:text-red-400 flex items-center gap-2 text-xs transition-colors group">
+                        <i data-lucide="flag" class="size-3 group-hover:fill-red-400"></i> Mark for Review
+                    </button>
+                </div>
+
+                <!-- Question Text -->
+                <div class="mb-10 min-h-[120px]">
+                    <h3 id="question-text" class="text-xl md:text-2xl font-medium leading-relaxed">
+                        Loading your entrance exam...
+                    </h3>
+                </div>
+
+                <!-- Options -->
+                <div id="options-container" class="grid gap-4">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <!-- Footer Navigation -->
+                <div class="flex justify-between items-center mt-12 pt-8 border-t border-white/5">
+                    <button onclick="prevQuestion()" id="prev-btn" class="flex items-center gap-2 text-gray-400 hover:text-white font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed">
+                        <i data-lucide="chevron-left"></i> Previous
+                    </button>
+                    <button onclick="nextQuestion()" id="next-btn" class="bg-indigo-600 hover:bg-indigo-500 px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20">
+                        Save & Next <i data-lucide="chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Side: Tracking Palette -->
+        <aside class="w-80 border-l border-white/5 bg-[#111827] hidden lg:flex flex-col">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                <h4 class="font-bold flex items-center gap-2 text-sm">
+                    <i data-lucide="grid-3x3" class="size-4 text-indigo-400"></i> Status Palette
+                </h4>
+                <span id="progress-text" class="text-[10px] font-bold text-gray-500 uppercase">0/100 Done</span>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                <div id="question-palette" class="grid grid-cols-5 gap-2">
+                    <!-- Palette items injected by JS -->
+                </div>
+            </div>
+            <!-- Legend -->
+            <div class="p-6 bg-[#0f172a] border-t border-white/5 space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="flex items-center gap-2 text-[10px] text-gray-400 font-medium">
+                        <div class="size-3 rounded bg-green-500"></div> Answered
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-gray-400 font-medium">
+                        <div class="size-3 rounded bg-indigo-500/20 border border-indigo-500"></div> Current
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-gray-400 font-medium">
+                        <div class="size-3 rounded bg-white/5"></div> Not Visited
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // --- DATA SECTION: Add your questions here ---
+        const questions = [
+            // PHYSICS (Mechanics)
+            {
+                q: "A particle moves in a circle of radius R with constant speed v. The acceleration of the particle is:",
+                options: ["v²/R towards center", "v²/R away from center", "vR towards center", "Zero"],
+                correct: 0
+            },
+            {
+                q: "The dimension of Universal Gravitational Constant (G) is:",
+                options: ["[M⁻¹L³T⁻²]", "[ML²T⁻²]", "[M⁻¹L²T⁻¹]", "[MLT⁻²]"],
+                correct: 0
+            },
+            // MATHEMATICS (Calculus/Algebra)
+            {
+                q: "The value of lim(x→0) [sin(x)/x] is equal to:",
+                options: ["0", "Infinity", "1", "Does not exist"],
+                correct: 2
+            },
+            {
+                q: "If A is a square matrix of order 3 and |A| = 5, then |adj A| is:",
+                options: ["5", "25", "125", "15"],
+                correct: 1
+            },
+            // CHEMISTRY
+            {
+                q: "Which of the following is the strongest acid?",
+                options: ["HCl", "HI", "HBr", "HF"],
+                correct: 1
+            },
+            {
+                q: "The oxidation state of Cr in K₂Cr₂O₇ is:",
+                options: ["+3", "+4", "+5", "+6"],
+                correct: 3
+            },
+            // ENGLISH
+            {
+                q: "Identify the synonym of 'Abstain':",
+                options: ["Indulge", "Refrain", "Accept", "Begin"],
+                correct: 1
+            },
+            {
+                q: "He is ______ honorable man.",
+                options: ["a", "an", "the", "none"],
+                correct: 1
+            }
+            // Tip: Duplicate these blocks to reach 100 questions!
+        ];
+
+        let currentIdx = 0;
+        let answers = new Array(questions.length).fill(null);
+
+        function init() {
+            renderPalette();
+            showQuestion();
+            startTimer(3 * 60 * 60); // 3 Hours
+            lucide.createIcons();
+        }
+
+        function renderPalette() {
+            const palette = document.getElementById('question-palette');
+            palette.innerHTML = questions.map((_, i) => `
+                <button onclick="jumpTo(${i})" id="p-${i}" class="size-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold transition-all hover:bg-white/10">
+                    ${(i + 1).toString().padStart(2, '0')}
+                </button>
+            `).join('');
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            document.getElementById('q-number').innerText = `Question ${currentIdx + 1} of ${questions.length}`;
+            document.getElementById('question-text').innerText = q.q;
+            
+            // Handle Previous button state
+            document.getElementById('prev-btn').disabled = (currentIdx === 0);
+            
+            // Handle Next/Submit button text
+            const nextBtn = document.getElementById('next-btn');
+            if (currentIdx === questions.length - 1) {
+                nextBtn.innerHTML = `Finish Test <i data-lucide="check-circle" class="size-4"></i>`;
+                nextBtn.classList.replace('bg-indigo-600', 'bg-green-600');
+            } else {
+                nextBtn.innerHTML = `Save & Next <i data-lucide="chevron-right" class="size-4"></i>`;
+                nextBtn.classList.add('bg-indigo-600');
+            }
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = q.options.map((opt, i) => `
+                <button onclick="selectOption(${i})" class="option-btn group flex items-center gap-4 p-4 md:p-5 rounded-2xl border border-white/5 bg-[#1e293b] hover:border-indigo-500/50 transition-all text-left w-full ${answers[currentIdx] === i ? 'option-selected' : ''}">
+                    <span class="size-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center font-bold group-hover:bg-indigo-600 transition-all text-sm">${String.fromCharCode(65 + i)}</span>
+                    <span class="text-base md:text-lg text-gray-300 group-hover:text-white">${opt}</span>
+                </button>
+            `).join('');
+
+            // Update Palette UI
+            document.querySelectorAll('[id^="p-"]').forEach(el => el.classList.remove('palette-current'));
+            const currentP = document.getElementById(`p-${currentIdx}`);
+            currentP.classList.add('palette-current');
+            
+            // Update Progress Tracking
+            const answeredCount = answers.filter(a => a !== null).length;
+            document.getElementById('progress-text').innerText = `${answeredCount}/${questions.length} Done`;
+
+            lucide.createIcons();
+        }
+
+        function selectOption(i) {
+            answers[currentIdx] = i;
+            document.getElementById(`p-${currentIdx}`).classList.add('palette-answered');
+            showQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentIdx < questions.length - 1) {
+                currentIdx++;
+                showQuestion();
+            } else {
+                finishTest();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                showQuestion();
+            }
+        }
+
+        function jumpTo(i) {
+            currentIdx = i;
+            showQuestion();
+        }
+
+        function startTimer(duration) {
+            let timer = duration, hours, minutes, seconds;
+            const timerEl = document.getElementById('timer');
+            const interval = setInterval(() => {
+                hours = parseInt(timer / 3600, 10);
+                minutes = parseInt((timer % 3600) / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                timerEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timer <= 300) timerEl.parentElement.classList.replace('text-orange-400', 'text-red-500'); // Red if < 5 mins
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function finishTest() {
+            const score = calculateScore();
+            alert(`Test Completed!\nYour Score: ${score}/${questions.length}\nReturning to Engineering Portal.`);
+            window.location.href = 'engineering-ioe.html';
+        }
+
+        function calculateScore() {
+            return answers.reduce((total, ans, idx) => {
+                return total + (ans === questions[idx].correct ? 1 : 0);
+            }, 0);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

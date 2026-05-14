@@ -3,304 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AspireX Pro | BSC-CSIT Diagnostic Portal</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>CodeTMC Academy - Master Entrance Exams</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Config for your specific colors -->
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        accent: '#818cf8',
+                        background: '#0f172a',
+                        card: '#1e293b'
+                    },
+                    // Adding a custom size class for icons
+                    spacing: {
+                        '12': '3rem', 
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary: #d63031; --secondary: #004a99; --success: #22c55e;
-            --danger: #ef4444; --dark: #0f172a; --light: #f8fafc;
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.1) 0%, transparent 50%);
         }
-        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--dark); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        
-        header { background: var(--dark); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        #timer-display { font-weight: 800; background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 0.5rem; color: #fbbf24; }
-
-        .main-container { max-width: 1200px; margin: 2rem auto; display: grid; grid-template-columns: 1fr 350px; gap: 2rem; padding: 0 20px; flex: 1; }
-        
-        .card { background: white; border-radius: 1.5rem; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-        .q-text { font-size: 1.4rem; font-weight: 800; margin-bottom: 1.5rem; }
-        
-        .option-btn { 
-            display: block; width: 100%; padding: 1.2rem; margin-bottom: 1rem; border: 2px solid #e2e8f0; 
-            border-radius: 1rem; cursor: pointer; text-align: left; font-weight: 600; transition: 0.2s; font-size: 1rem;
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .option-btn:hover { border-color: var(--secondary); background: #f0f7ff; }
-        .option-btn.selected { border-color: var(--secondary); background: #e0f2fe; color: var(--secondary); border-width: 3px; }
-        .option-btn.correct { border-color: var(--success) !important; background: #f0fdf4 !important; color: var(--success); }
-        .option-btn.wrong { border-color: var(--danger) !important; background: #fef2f2 !important; color: var(--danger); }
-
-        .nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
-        .nav-dot { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; border: 1px solid #e2e8f0; }
-        .nav-dot.answered { background: var(--secondary); color: white; border: none; }
-        .nav-dot.current { border: 2px solid var(--dark); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--dark); }
-
-        #results-screen { display: none; max-width: 900px; margin: 2rem auto; }
-        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
-        
-        footer { background: white; padding: 2rem; text-align: center; border-top: 1px solid #e2e8f0; margin-top: 3rem; }
-        .hidden { display: none !important; }
-
-        @media (max-width: 850px) { .main-container { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body>
+<body class="bg-background text-white min-h-screen">
 
-<header>
-    <div style="font-size: 1.5rem; font-weight: 900;">Aspire<span style="color:var(--primary)">X</span> <small style="font-weight: 400; opacity: 0.7;">| Pro Simulator</small></div>
-    <div id="timer-display">60:00</div>
-</header>
-
-<div class="main-container" id="quiz-screen">
-    <main>
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                <span id="category-label" style="font-weight: 800; color: var(--primary); text-transform: uppercase;">Category</span>
-                <span id="q-progress" style="font-weight: 700; color: #94a3b8;">Question 1/50</span>
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/10 glass">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="bg-primary p-1.5 rounded-lg">
+                    <i data-lucide="graduation-cap" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight">CodeTMC Academy</span>
             </div>
-            <div id="question-text" class="q-text"></div>
-            <div id="options-area"></div>
-            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
-                <button onclick="changeQuestion(-1)" style="flex: 1; padding: 1rem; border-radius: 0.8rem; border: 1px solid #ddd; cursor: pointer; font-weight: 700;">Previous</button>
-                <button onclick="changeQuestion(1)" style="flex: 1; padding: 1rem; border-radius: 0.8rem; background: var(--dark); color: white; border: none; cursor: pointer; font-weight: 700;">Next Question</button>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                <a href="#features" class="hover:text-primary transition-colors">Features</a>
+                <a href="#exams" class="hover:text-primary transition-colors">Exams</a>
+                <a href="materials.html" class="hover:text-primary transition-colors">Notes</a>
             </div>
-        </div>
-    </main>
-
-    <aside>
-        <div class="card">
-            <h4 style="margin-top: 0;">Navigator</h4>
-            <div class="nav-grid" id="nav-grid"></div>
-            <button onclick="finishExam()" style="width: 100%; margin-top: 2rem; background: var(--primary); color: white; border: none; padding: 1.2rem; border-radius: 0.8rem; font-weight: 800; cursor: pointer;">Submit Final Exam</button>
-        </div>
-    </aside>
-</div>
-
-<div id="results-screen">
-    <div class="card" style="text-align: center;">
-        <h1>Exam <span style="color: var(--secondary);">Report Card</span></h1>
-        <div class="analytics-grid">
-            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--dark); color: white; border-radius: 1.5rem; padding: 2rem;">
-                <small>OVERALL SCORE</small>
-                <h2 id="final-score" style="font-size: 4rem; margin: 0;">0/50</h2>
-                <p id="percentage-label">0% Success Rate</p>
-            </div>
-            <div style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 1.5rem;">
-                <canvas id="categoryChart" width="300" height="300"></canvas>
+            <div class="flex items-center gap-4">
+                <button class="px-4 py-2 text-sm font-medium hover:text-primary transition-colors">Login</button>
+                <a href="dashboard.html" class="bg-primary hover:bg-primary/90 px-4 py-2 rounded-lg text-sm font-bold shadow-[0_0_20px_rgba(82,82,224,0.3)]">Get Started</a>
             </div>
         </div>
+    </nav>
 
-        <div id="feedback-area" style="margin-top: 2rem; padding: 1.5rem; background: #fff7ed; border-radius: 1rem; border-left: 6px solid #f97316; text-align: left;"></div>
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 hero-gradient relative overflow-hidden">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 relative z-10">
+                <div class="inline-flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/20 text-primary text-xs font-semibold uppercase">
+                    <i data-lucide="sparkles" class="w-3 h-3"></i>
+                    Nepal's #1 Entrance Platform
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
+                    Master Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Entrance Exams</span> with AI.
+                </h1>
+                <p class="text-xl text-gray-400 max-w-xl">
+                    From CEE and IOE to BSc CSIT and NEB +2 Board, get personalized learning, smart quizzes, and a supportive student community.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="dashboard.html" class="bg-primary h-14 px-8 rounded-xl text-lg font-bold flex items-center justify-center gap-2">
+    Start Preparing Now <i data-lucide="arrow-right"></i>
+</a>
+<a href="materials.html" class="border border-white/10 h-14 px-8 rounded-xl text-lg font-bold hover:bg-white/5 transition-colors flex items-center justify-center">
+    View Free Notes
+</a>
+                </div>
+            </div>
 
-        <button onclick="toggleReviewMode()" style="margin-top: 2rem; padding: 1.2rem 2.5rem; background: var(--secondary); color: white; border: none; border-radius: 0.8rem; font-weight: 800; cursor: pointer; width: 100%;">Step-by-Step Review (Correct vs Your Answers)</button>
-    </div>
-</div>
+            <!-- Hero Image Preview (The Stats Box) -->
+            <div class="relative hidden lg:block">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px]"></div>
+                <div class="relative z-10 w-full h-[500px] rounded-2xl border border-white/10 bg-card/50 overflow-hidden shadow-2xl">
+                    <img src="https://picsum.photos/seed/study/800/600" class="w-full h-full object-cover opacity-60">
+                    <div class="absolute bottom-6 left-6 right-6 p-6 rounded-xl glass">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-70">Weekly Progress</p>
+                                <p class="text-2xl font-bold">94% Mastery</p>
+                            </div>
+                            <div class="bg-primary/20 p-3 rounded-full">
+                                <i data-lucide="trophy" class="text-primary w-8 h-8"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<footer>
-    <p>Success is the sum of small efforts, repeated day in and day out.</p>
-    <p>© 2026 AspireX Education. Reference: <a href="https://codetmc.wordpress.com" target="_blank" style="color: var(--secondary); font-weight: bold;">codetmc.wordpress.com</a></p>
-</footer>
+    <!-- Stats Section -->
+    <section class="py-12 border-y border-white/5 bg-white/5">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <p class="text-3xl font-bold">100K+</p>
+                    <p class="text-sm text-gray-400">Questions</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold">500+</p>
+                    <p class="text-sm text-gray-400">Mock Tests</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold">2,000+</p>
+                    <p class="text-sm text-gray-400">Free Notes</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold">300+</p>
+                    <p class="text-sm text-gray-400">Active Groups</p>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- Exam Categories Section -->
+    <section id="exams" class="py-24 px-4">
+        <div class="max-w-7xl mx-auto space-y-12">
+            <!-- Section Header -->
+            <div class="text-center space-y-4 max-w-2xl mx-auto">
+                <h2 class="text-4xl font-bold">Choose Your Exam Path</h2>
+                <p class="text-gray-400">Comprehensive study material and mock tests for all major examinations in Nepal.</p>
+            </div>
 
-<script>
-    const questions = [
-        // PHYSICS (13)
-        { cat: "Physics", q: "The angle between two equal vectors such that their resultant is also equal to either of them is:", opts: ["0°", "60°", "90°", "120°"], ans: 3, exp: "Using R² = A² + B² + 2AB cosθ. If R=A=B, then cosθ = -1/2, so θ = 120°." },
-        { cat: "Physics", q: "A body of mass 5kg is moving in a circle of radius 1m with an angular velocity of 2 rad/s. Centripetal force is:", opts: ["10 N", "20 N", "5 N", "40 N"], ans: 1, exp: "F = mω²r = 5 × (2)² × 1 = 20 N." },
-        { cat: "Physics", q: "At what temperature do the Celsius and Fahrenheit scales coincide?", opts: ["40°", "-40°", "0°", "100°"], ans: 1, exp: "Using C/5 = (F-32)/9, setting C=F=x gives x = -40." },
-        { cat: "Physics", q: "The working principle of an optical fiber is:", opts: ["Refraction", "Scattering", "Total Internal Reflection", "Dispersion"], ans: 2, exp: "Optical fibers transmit light using the principle of Total Internal Reflection (TIR)." },
-        { cat: "Physics", q: "The unit of magnetic flux is:", opts: ["Tesla", "Weber", "Henry", "Farad"], ans: 1, exp: "Weber is the SI unit of magnetic flux." },
-        { cat: "Physics", q: "If the distance between two masses is doubled, the gravitational force becomes:", opts: ["Half", "Double", "One-fourth", "Four times"], ans: 2, exp: "F ∝ 1/r². If r is doubled, F becomes 1/2² = 1/4." },
-        { cat: "Physics", q: "Which of the following has the highest frequency?", opts: ["Radio waves", "Infrared", "Gamma rays", "Microwaves"], ans: 2, exp: "Gamma rays have the shortest wavelength and highest frequency." },
-        { cat: "Physics", q: "The energy stored in a capacitor of capacitance C and potential V is:", opts: ["CV", "1/2 CV", "1/2 CV²", "CV²"], ans: 2, exp: "E = ½CV²." },
-        { cat: "Physics", q: "A convex lens is used to correct:", opts: ["Myopia", "Hypermetropia", "Astigmatism", "Presbyopia"], ans: 1, exp: "Hypermetropia (farsightedness) requires a converging convex lens." },
-        { cat: "Physics", q: "The resistance of an ideal ammeter is:", opts: ["Zero", "Infinite", "Very high", "Unitary"], ans: 0, exp: "An ideal ammeter should have zero resistance." },
-        { cat: "Physics", q: "The escape velocity from the Earth's surface is approximately:", opts: ["7.2 km/s", "11.2 km/s", "9.8 km/s", "4.2 km/s"], ans: 1, exp: "v = √(2gR) ≈ 11.2 km/s." },
-        { cat: "Physics", q: "Dimensions of Surface Tension are:", opts: ["[MT⁻²]", "[MLT⁻²]", "[ML²T⁻²]", "[MT⁻¹]"], ans: 0, exp: "Surface Tension = Force/Length = [MLT⁻²]/[L] = [MT⁻²]." },
-        { cat: "Physics", q: "In an adiabatic process, which of the following remains constant?", opts: ["Temperature", "Pressure", "Volume", "Heat content"], ans: 3, exp: "An adiabatic process is one where no heat enters or leaves the system (dQ=0)." },
+            <!-- The Grid -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Medical (CEE) -->
+                <div class="group p-8 rounded-2xl border border-red-500/20 bg-card hover:shadow-[0_0_30px_rgba(239,68,68,0.1)] transition-all hover:-translate-y-1 cursor-pointer">
+                    <div class="size-12 rounded-xl bg-white/5 group-hover:bg-red-500 transition-colors flex items-center justify-center mb-6">
+                        <i data-lucide="book-open" class="w-6 h-6 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Medical (CEE)</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">Complete preparation for Common Entrance Examination.</p>
+                    <a href="medical-cee.html" class="text-red-400 font-semibold inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                        Browse Tests <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
 
-        // MATH (13)
-        { cat: "Math", q: "If n(A)=15, n(B)=20 and n(A∪B)=30, then n(A∩B) is:", opts: ["5", "10", "15", "35"], ans: 0, exp: "n(A∩B) = n(A) + n(B) - n(A∪B) = 15 + 20 - 30 = 5." },
-        { cat: "Math", q: "The value of i⁴⁰ is:", opts: ["i", "-i", "1", "-1"], ans: 2, exp: "i⁴⁰ = (i⁴)¹⁰ = 1¹⁰ = 1." },
-        { cat: "Math", q: "The derivative of log(sin x) with respect to x is:", opts: ["tan x", "cot x", "sec x", "cosec x"], ans: 1, exp: "d/dx[ln(sin x)] = (1/sin x) * cos x = cot x." },
-        { cat: "Math", q: "The area bounded by y = x, x-axis and lines x=0 to x=2 is:", opts: ["1", "2", "4", "0"], ans: 1, exp: "∫x dx from 0 to 2 is [x²/2] = 4/2 = 2." },
-        { cat: "Math", q: "The value of sin(sin⁻¹ 1/2) is:", opts: ["1", "1/2", "0", "π/6"], ans: 1, exp: "sin(sin⁻¹ x) = x." },
-        { cat: "Math", q: "If a matrix A is 2x3 and B is 3x4, the order of AB is:", opts: ["3x3", "2x4", "4x2", "2x3"], ans: 1, exp: "Resultant order is (rows of first) x (cols of second) = 2x4." },
-        { cat: "Math", q: "The slope of the line parallel to 2x + 3y = 5 is:", opts: ["2/3", "-2/3", "3/2", "-3/2"], ans: 1, exp: "Slope m = -a/b = -2/3." },
-        { cat: "Math", q: "The limit of (sin x)/x as x approaches 0 is:", opts: ["0", "1", "∞", "Undefined"], ans: 1, exp: "This is a fundamental trig limit theorem." },
-        { cat: "Math", q: "The sum of the roots of x² - 5x + 6 = 0 is:", opts: ["5", "-5", "6", "-6"], ans: 0, exp: "Sum of roots = -b/a = -(-5)/1 = 5." },
-        { cat: "Math", q: "The eccentricity of a circle is:", opts: ["1", "0", "Greater than 1", "Less than 1"], ans: 1, exp: "By definition, circle eccentricity is 0." },
-        { cat: "Math", q: "Integration of eˣ dx is:", opts: ["eˣ + c", "xeˣ + c", "eˣ⁺¹ + c", "1/eˣ + c"], ans: 0, exp: "The integral of eˣ is eˣ." },
-        { cat: "Math", q: "The value of 5P2 is:", opts: ["10", "20", "120", "60"], ans: 1, exp: "5P2 = 5! / (5-2)! = 120/6 = 20." },
-        { cat: "Math", q: "The distance between (0,0) and (3,4) is:", opts: ["3", "4", "5", "7"], ans: 2, exp: "√(3² + 4²) = √25 = 5." },
+                <!-- Engineering (IOE) -->
+                <div class="group p-8 rounded-2xl border border-blue-500/20 bg-card hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] transition-all hover:-translate-y-1 cursor-pointer">
+                    <div class="size-12 rounded-xl bg-white/5 group-hover:bg-blue-500 transition-colors flex items-center justify-center mb-6">
+                        <i data-lucide="book-open" class="w-6 h-6 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Engineering (IOE)</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">Ace the Institute of Engineering entrance tests.</p>
+                    <a href="engineering-ioe.html" class="text-blue-400 font-semibold inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                        Browse Tests <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
 
-        // CHEMISTRY (12)
-        { cat: "Chemistry", q: "The bond angle in a water molecule (H₂O) is:", opts: ["109.5°", "180°", "104.5°", "120°"], ans: 2, exp: "Lone pair repulsion reduces the angle to 104.5°." },
-        { cat: "Chemistry", q: "Which of the following is an alkali metal?", opts: ["Mg", "Ca", "Na", "Al"], ans: 2, exp: "Sodium (Na) is in Group 1." },
-        { cat: "Chemistry", q: "The process of loss of electrons is called:", opts: ["Reduction", "Oxidation", "Hydrogenation", "Substitution"], ans: 1, exp: "Oxidation Is Loss (OIL)." },
-        { cat: "Chemistry", q: "The pH of a 0.01 M HCl solution is:", opts: ["1", "2", "7", "12"], ans: 1, exp: "pH = -log[0.01] = 2." },
-        { cat: "Chemistry", q: "The main constituent of LPG is:", opts: ["Methane", "Butane", "Ethane", "Acetylene"], ans: 1, exp: "LPG is primarily Butane and Propane." },
-        { cat: "Chemistry", q: "Which gas is known as 'Laughing Gas'?", opts: ["NO", "NO₂", "N₂O", "N₂O₅"], ans: 2, exp: "Nitrous Oxide (N₂O)." },
-        { cat: "Chemistry", q: "The hybridisation of Carbon in Methane (CH₄) is:", opts: ["sp", "sp2", "sp3", "dsp2"], ans: 2, exp: "Carbon in Methane forms 4 sigma bonds (sp³)." },
-        { cat: "Chemistry", q: "Which element has the highest electronegativity?", opts: ["Oxygen", "Fluorine", "Chlorine", "Nitrogen"], ans: 1, exp: "Fluorine is the most electronegative element." },
-        { cat: "Chemistry", q: "The functional group of aldehydes is:", opts: ["-OH", "-COOH", "-CHO", "-CO-"], ans: 2, exp: "-CHO is the aldehyde group." },
-        { cat: "Chemistry", q: "An isotope has the same number of:", opts: ["Neutrons", "Protons", "Mass Number", "Nucleons"], ans: 1, exp: "Isotopes have the same atomic number (protons)." },
-        { cat: "Chemistry", q: "Which of the following is a transition element?", opts: ["Sodium", "Calcium", "Iron", "Magnesium"], ans: 2, exp: "Iron (Fe) is a d-block transition element." },
-        { cat: "Chemistry", q: "The gas evolved when Zinc reacts with dil. H₂SO₄ is:", opts: ["O₂", "CO₂", "H₂", "SO₂"], ans: 2, exp: "Zn + H₂SO₄ → ZnSO₄ + H₂." },
+                <!-- CSIT/BIT -->
+                <div class="group p-8 rounded-2xl border border-green-500/20 bg-card hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all hover:-translate-y-1 cursor-pointer">
+                    <div class="size-12 rounded-xl bg-white/5 group-hover:bg-green-500 transition-colors flex items-center justify-center mb-6">
+                        <i data-lucide="book-open" class="w-6 h-6 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">CSIT/BIT</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">Specialized materials for computer science aspirants.</p>
+                    <a href="csit-bit.html" class="text-green-400 font-semibold inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                        Browse Tests <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
 
-        // ENGLISH (12)
-        { cat: "English", q: "Identify the synonym of 'Pinnacle':", opts: ["Base", "Summit", "Valley", "Road"], ans: 1, exp: "Pinnacle means the peak or highest point." },
-        { cat: "English", q: "I have been living here ___ 2010.", opts: ["for", "since", "from", "by"], ans: 1, exp: "'Since' is used for a point in time." },
-        { cat: "English", q: "Change into Passive: 'He plays football.'", opts: ["Football was played by him.", "Football is played by him.", "Football has been played by him.", "Football being played by him."], ans: 1, exp: "Simple present passive: is + V3." },
-        { cat: "English", q: "The antonym of 'Transparent' is:", opts: ["Clear", "Opaque", "Translucent", "Bright"], ans: 1, exp: "Opaque means light cannot pass through." },
-        { cat: "English", q: "One who knows many languages is called:", opts: ["Polyglot", "Polygamist", "Orator", "Ambiguous"], ans: 0, exp: "A polyglot speaks multiple languages." },
-        { cat: "English", q: "Which of the following is correctly spelled?", opts: ["Committee", "Comittee", "Committe", "Comitee"], ans: 0, exp: "Committee has double m, t, and e." },
-        { cat: "English", q: "He is ___ M.A. in English.", opts: ["a", "an", "the", "no article"], ans: 1, exp: "'M' sounds like 'em' (vowel sound), so 'an' is used." },
-        { cat: "English", q: "If I ___ rich, I would help everyone.", opts: ["am", "was", "were", "had"], ans: 2, exp: "Hypothetical 'if' uses 'were' for all subjects." },
-        { cat: "English", q: "The study of birds is called:", opts: ["Biology", "Ornithology", "Zoology", "Anthropology"], ans: 1, exp: "Ornithology is the study of birds." },
-        { cat: "English", q: "He is afraid ___ dogs.", opts: ["with", "of", "from", "at"], ans: 1, exp: "Afraid takes the preposition 'of'." },
-        { cat: "English", q: "Select the correctly punctuated sentence:", opts: ["He said, I am happy.", "He said 'I am happy.'", "He said, \"I am happy.\"", "He said \"I am happy\""], ans: 2, exp: "Proper punctuation for direct speech." },
-        { cat: "English", q: "Part of speech of the underlined word: She sang **beautifully**.", opts: ["Adjective", "Adverb", "Noun", "Verb"], ans: 1, exp: "Beautifully describes the verb 'sang'." }
-    ];
+                <!-- NEB +2 Board -->
+                <div class="group p-8 rounded-2xl border border-purple-500/20 bg-card hover:shadow-[0_0_30px_rgba(168,85,247,0.1)] transition-all hover:-translate-y-1 cursor-pointer">
+                    <div class="size-12 rounded-xl bg-white/5 group-hover:bg-purple-500 transition-colors flex items-center justify-center mb-6">
+                        <i data-lucide="book-open" class="w-6 h-6 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">NEB +2 Board</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">Full coverage for Class 11 and 12 Board exams.</p>
+                    <a href="#" class="text-purple-400 font-semibold inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                        Browse Tests <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
 
-    let currentIdx = 0;
-    let userAnswers = new Array(questions.length).fill(null);
-    let isReviewMode = false;
+                <!-- Loksewa -->
+                <div class="group p-8 rounded-2xl border border-orange-500/20 bg-card hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all hover:-translate-y-1 cursor-pointer">
+                    <div class="size-12 rounded-xl bg-white/5 group-hover:bg-orange-500 transition-colors flex items-center justify-center mb-6">
+                        <i data-lucide="book-open" class="w-6 h-6 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Loksewa</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">Public service commission preparation materials.</p>
+                    <a href="#" class="text-orange-400 font-semibold inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                        Browse Tests <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
 
-    function init() {
-        const grid = document.getElementById('nav-grid');
-        questions.forEach((_, i) => {
-            const btn = document.createElement('div');
-            btn.className = 'nav-dot';
-            btn.innerText = i + 1;
-            btn.id = `nav-${i}`;
-            btn.onclick = () => { currentIdx = i; render(); };
-            grid.appendChild(btn);
-        });
-        render();
-        startTimer();
-    }
-
-    function render() {
-        const q = questions[currentIdx];
-        document.getElementById('category-label').innerText = q.cat;
-        document.getElementById('q-progress').innerText = `Question ${currentIdx + 1}/${questions.length}`;
-        document.getElementById('question-text').innerText = q.q;
-        
-        const area = document.getElementById('options-area');
-        area.innerHTML = '';
-        
-        q.opts.forEach((opt, i) => {
-            const btn = document.createElement('button');
-            btn.className = `option-btn ${userAnswers[currentIdx] === i ? 'selected' : ''}`;
+                <!-- CMAT/Management -->
+                <div class="group p-8 rounded-2xl border border-cyan-500/20 bg-card hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all hover:-translate-y-1 cursor-pointer">
+                    <div class="size-12 rounded-xl bg-white/5 group-hover:bg-cyan-500 transition-colors flex items-center justify-center mb-6">
+                        <i data-lucide="book-open" class="w-6 h-6 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">CMAT/Management</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">Bachelor degree management entrance mocks.</p>
+                    <a href="#" class="text-cyan-400 font-semibold inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                        Browse Tests <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Initialize Icons -->
+     <!-- Footer -->
+    <footer class="py-20 border-t border-white/5 bg-card/30">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-12">
             
-            if (isReviewMode) {
-                btn.disabled = true;
-                if (i === q.ans) btn.classList.add('correct');
-                if (userAnswers[currentIdx] === i && i !== q.ans) btn.classList.add('wrong');
-            }
-            
-            btn.innerHTML = opt;
-            btn.onclick = () => { if(!isReviewMode) selectOption(i); };
-            area.appendChild(btn);
-        });
+            <!-- Column 1: Brand -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2">
+                    <div class="bg-primary p-1.5 rounded-lg">
+                        <i data-lucide="graduation-cap" class="size-6 text-white"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight">CodeTMC Academy</span>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Empowering Nepali students with premium digital education tools and a vibrant learning community.
+                </p>
+            </div>
 
-        if (isReviewMode) {
-            const expDiv = document.createElement('div');
-            expDiv.style = "margin-top:1.5rem; padding:1.2rem; background:#f0f9ff; border-radius:0.8rem; border:1px solid #bae6fd; color:#0369a1;";
-            expDiv.innerHTML = `<strong>Explanation:</strong> ${q.exp}`;
-            area.appendChild(expDiv);
-        }
+            <!-- Column 2: Explore -->
+            <div>
+                <h4 class="font-bold mb-6 text-white">Explore</h4>
+                <ul class="space-y-4 text-sm text-gray-400">
+                    <li><a href="dashboard.html" class="hover:text-primary transition-colors">Quiz Engine</a></li>
+                    <li><a href="materials.html" class="hover:text-primary transition-colors">Study Materials</a></li>
+                
+                </ul>
+            </div>
 
-        document.querySelectorAll('.nav-dot').forEach((d, i) => {
-            d.classList.toggle('current', i === currentIdx);
-            d.classList.toggle('answered', userAnswers[i] !== null);
-        });
-    }
+            <!-- Column 3: Support -->
+            <div>
+                <h4 class="font-bold mb-6 text-white">Support</h4>
+                <ul class="space-y-4 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Contact Support</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></li>
+                </ul>
+            </div>
 
-    function selectOption(i) {
-        userAnswers[currentIdx] = i;
-        render();
-    }
+            <!-- Column 4: Newsletter -->
+            <div>
+                <h4 class="font-bold mb-6 text-white">Newsletter</h4>
+                <p class="text-sm text-gray-400 mb-4">Get the latest exam notices and study tips.</p>
+                <div class="flex gap-2">
+                    <input type="email" placeholder="Your email" class="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm w-full focus:outline-none focus:border-primary">
+                    <button class="bg-primary p-2 rounded-lg shrink-0 hover:bg-primary/90 transition-colors">
+                        <i data-lucide="arrow-right" class="size-4 text-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-    function changeQuestion(dir) {
-        currentIdx = (currentIdx + dir + questions.length) % questions.length;
-        render();
-    }
-
-    function finishExam() {
-        if (!confirm("Confirm submission?")) return;
-        document.getElementById('quiz-screen').classList.add('hidden');
-        document.getElementById('results-screen').style.display = 'block';
-        
-        let score = 0;
-        const stats = {}; 
-        questions.forEach((q, i) => {
-            if (!stats[q.cat]) stats[q.cat] = { correct: 0, total: 0 };
-            stats[q.cat].total++;
-            if (userAnswers[i] === q.ans) {
-                score++;
-                stats[q.cat].correct++;
-            }
-        });
-
-        document.getElementById('final-score').innerText = `${score}/${questions.length}`;
-        document.getElementById('percentage-label').innerText = `${(score/questions.length * 100).toFixed(1)}% Success Rate`;
-        renderChart(stats);
-        generateFeedback(stats);
-    }
-
-    function renderChart(stats) {
-        const ctx = document.getElementById('categoryChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(stats),
-                datasets: [{
-                    data: Object.values(stats).map(s => s.correct),
-                    backgroundColor: ['#d63031', '#004a99', '#22c55e', '#fbbf24'],
-                    borderWidth: 0
-                }]
-            },
-            options: { plugins: { legend: { position: 'bottom' } } }
-        });
-    }
-
-    function generateFeedback(stats) {
-        let lowestCat = "";
-        let minRate = 1.1;
-        for (let cat in stats) {
-            let rate = stats[cat].correct / stats[cat].total;
-            if (rate < minRate) {
-                minRate = rate;
-                lowestCat = cat;
-            }
-        }
-        document.getElementById('feedback-area').innerHTML = `
-            <h3>Diagnostic Insight</h3>
-            <p>You showed a performance dip in <strong>${lowestCat}</strong>.</p>
-            <p><strong>Recommendation:</strong> Revisit your <em>AspireX Handbooks</em> for ${lowestCat} to boost your rank.</p>
-        `;
-    }
-
-    function toggleReviewMode() {
-        isReviewMode = true;
-        currentIdx = 0;
-        document.getElementById('results-screen').style.display = 'none';
-        document.getElementById('quiz-screen').classList.remove('hidden');
-        render();
-    }
-
-    function startTimer() {
-        let sec = 60 * 60;
-        const disp = document.getElementById('timer-display');
-        setInterval(() => {
-            let m = Math.floor(sec / 60);
-            let s = sec % 60;
-            disp.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-            if (sec > 0) sec--;
-        }, 1000);
-    }
-
-    init();
-</script>
+        <!-- Bottom Bar -->
+        <div class="max-w-7xl mx-auto px-4 pt-12 mt-12 border-t border-white/5 text-center text-sm text-gray-500">
+            © 2026 CodeTMC Academy. All rights reserved.
+        </div>
+    </footer>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
