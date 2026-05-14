@@ -3,274 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Full IOE Mock Test #1 - CodeTMC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title> BSC-CSIT Diagnostic Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .option-selected { border-color: #4f46e5 !important; background: rgba(79, 70, 229, 0.1); }
-        .palette-answered { background-color: #22c55e !important; border-color: #22c55e !important; color: white; }
-        .palette-current { ring: 2px solid #4f46e5; background: rgba(79, 70, 229, 0.2); color: #818cf8; }
-        /* Smooth scrolling for the question area */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        :root {
+            --primary: #d63031; --secondary: #004a99; --success: #22c55e;
+            --danger: #ef4444; --dark: #0f172a; --light: #f8fafc;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--dark); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header { background: var(--dark); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        #timer-display { font-weight: 800; background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 0.5rem; color: #fbbf24; }
+
+        .main-container { max-width: 1200px; margin: 2rem auto; display: grid; grid-template-columns: 1fr 350px; gap: 2rem; padding: 0 20px; flex: 1; }
+        
+        .card { background: white; border-radius: 1.5rem; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .q-text { font-size: 1.4rem; font-weight: 800; margin-bottom: 1.5rem; }
+        
+        .option-btn { 
+            display: block; width: 100%; padding: 1.2rem; margin-bottom: 1rem; border: 2px solid #e2e8f0; 
+            border-radius: 1rem; cursor: pointer; text-align: left; font-weight: 600; transition: 0.2s; font-size: 1rem;
+        }
+        .option-btn:hover { border-color: var(--secondary); background: #f0f7ff; }
+        .option-btn.selected { border-color: var(--secondary); background: #e0f2fe; color: var(--secondary); border-width: 3px; }
+        .option-btn.correct { border-color: var(--success) !important; background: #f0fdf4 !important; color: var(--success); }
+        .option-btn.wrong { border-color: var(--danger) !important; background: #fef2f2 !important; color: var(--danger); }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
+        .nav-dot { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; border: 1px solid #e2e8f0; }
+        .nav-dot.answered { background: var(--secondary); color: white; border: none; }
+        .nav-dot.current { border: 2px solid var(--dark); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--dark); }
+
+        #results-screen { display: none; max-width: 900px; margin: 2rem auto; }
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
+        
+        footer { background: white; padding: 2rem; text-align: center; border-top: 1px solid #e2e8f0; margin-top: 3rem; }
+        .hidden { display: none !important; }
+
+        @media (max-width: 850px) { .main-container { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body class="bg-[#0f172a] text-white min-h-screen flex flex-col overflow-hidden font-sans">
+<body>
 
-    <!-- Header -->
-    <header class="h-16 border-b border-white/5 bg-[#1e293b]/50 flex items-center justify-between px-8 z-50">
-        <div class="flex items-center gap-4">
-            <a href="engineering-ioe.html" class="hover:bg-white/5 p-2 rounded-lg transition-colors">
-                <i data-lucide="arrow-left" class="size-5"></i>
-            </a>
-            <div>
-                <h2 class="font-bold text-sm md:text-base">Full IOE Mock Test #1</h2>
-                <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Physics • Math • Chem • Eng</p>
+<header>
+    <div style="font-size: 1.5rem; font-weight: 900;">Aspire<span style="color:var(--primary)">X</span> <small style="font-weight: 400; opacity: 0.7;">| Pro Simulator</small></div>
+    <div id="timer-display">60:00</div>
+</header>
+
+<div class="main-container" id="quiz-screen">
+    <main>
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span id="category-label" style="font-weight: 800; color: var(--primary); text-transform: uppercase;">Category</span>
+                <span id="q-progress" style="font-weight: 700; color: #94a3b8;">Question 1/50</span>
+            </div>
+            <div id="question-text" class="q-text"></div>
+            <div id="options-area"></div>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                <button onclick="changeQuestion(-1)" style="flex: 1; padding: 1rem; border-radius: 0.8rem; border: 1px solid #ddd; cursor: pointer; font-weight: 700;">Previous</button>
+                <button onclick="changeQuestion(1)" style="flex: 1; padding: 1rem; border-radius: 0.8rem; background: var(--dark); color: white; border: none; cursor: pointer; font-weight: 700;">Next Question</button>
+            </div>
+        </div>
+    </main>
+
+    <aside>
+        <div class="card">
+            <h4 style="margin-top: 0;">Navigator</h4>
+            <div class="nav-grid" id="nav-grid"></div>
+            <button onclick="finishExam()" style="width: 100%; margin-top: 2rem; background: var(--primary); color: white; border: none; padding: 1.2rem; border-radius: 0.8rem; font-weight: 800; cursor: pointer;">Submit Final Exam</button>
+        </div>
+    </aside>
+</div>
+
+<div id="results-screen">
+    <div class="card" style="text-align: center;">
+        <h1>Exam <span style="color: var(--secondary);">Report Card</span></h1>
+        <div class="analytics-grid">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--dark); color: white; border-radius: 1.5rem; padding: 2rem;">
+                <small>OVERALL SCORE</small>
+                <h2 id="final-score" style="font-size: 4rem; margin: 0;">0/50</h2>
+                <p id="percentage-label">0% Success Rate</p>
+            </div>
+            <div style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 1.5rem;">
+                <canvas id="categoryChart" width="300" height="300"></canvas>
             </div>
         </div>
 
-        <div class="flex items-center gap-4 md:gap-8">
-            <div class="flex items-center gap-2 text-orange-400 bg-orange-400/10 px-3 md:px-4 py-1.5 rounded-full border border-orange-400/20">
-                <i data-lucide="timer" class="size-4"></i>
-                <span id="timer" class="font-mono font-bold text-sm">03:00:00</span>
-            </div>
-            <button onclick="finishTest()" class="bg-indigo-600 hover:bg-indigo-700 px-4 md:px-6 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-indigo-600/20">
-                Submit
-            </button>
-        </div>
-    </header>
+        <div id="feedback-area" style="margin-top: 2rem; padding: 1.5rem; background: #fff7ed; border-radius: 1rem; border-left: 6px solid #f97316; text-align: left;"></div>
 
-    <div class="flex-1 flex overflow-hidden">
-        <!-- Question Section -->
-        <main class="flex-1 overflow-y-auto p-6 md:p-12 custom-scrollbar">
-            <div class="max-w-3xl mx-auto">
-                <div class="flex justify-between items-center mb-8">
-                    <span id="q-number" class="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-400/10 px-3 py-1 rounded-full">Question 1 of 100</span>
-                    <button class="text-gray-500 hover:text-red-400 flex items-center gap-2 text-xs transition-colors group">
-                        <i data-lucide="flag" class="size-3 group-hover:fill-red-400"></i> Mark for Review
-                    </button>
-                </div>
-
-                <!-- Question Text -->
-                <div class="mb-10 min-h-[120px]">
-                    <h3 id="question-text" class="text-xl md:text-2xl font-medium leading-relaxed">
-                        Loading your entrance exam...
-                    </h3>
-                </div>
-
-                <!-- Options -->
-                <div id="options-container" class="grid gap-4">
-                    <!-- Options injected by JS -->
-                </div>
-
-                <!-- Footer Navigation -->
-                <div class="flex justify-between items-center mt-12 pt-8 border-t border-white/5">
-                    <button onclick="prevQuestion()" id="prev-btn" class="flex items-center gap-2 text-gray-400 hover:text-white font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed">
-                        <i data-lucide="chevron-left"></i> Previous
-                    </button>
-                    <button onclick="nextQuestion()" id="next-btn" class="bg-indigo-600 hover:bg-indigo-500 px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20">
-                        Save & Next <i data-lucide="chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-        </main>
-
-        <!-- Right Side: Tracking Palette -->
-        <aside class="w-80 border-l border-white/5 bg-[#111827] hidden lg:flex flex-col">
-            <div class="p-6 border-b border-white/5 flex justify-between items-center">
-                <h4 class="font-bold flex items-center gap-2 text-sm">
-                    <i data-lucide="grid-3x3" class="size-4 text-indigo-400"></i> Status Palette
-                </h4>
-                <span id="progress-text" class="text-[10px] font-bold text-gray-500 uppercase">0/100 Done</span>
-            </div>
-            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
-                <div id="question-palette" class="grid grid-cols-5 gap-2">
-                    <!-- Palette items injected by JS -->
-                </div>
-            </div>
-            <!-- Legend -->
-            <div class="p-6 bg-[#0f172a] border-t border-white/5 space-y-3">
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="flex items-center gap-2 text-[10px] text-gray-400 font-medium">
-                        <div class="size-3 rounded bg-green-500"></div> Answered
-                    </div>
-                    <div class="flex items-center gap-2 text-[10px] text-gray-400 font-medium">
-                        <div class="size-3 rounded bg-indigo-500/20 border border-indigo-500"></div> Current
-                    </div>
-                    <div class="flex items-center gap-2 text-[10px] text-gray-400 font-medium">
-                        <div class="size-3 rounded bg-white/5"></div> Not Visited
-                    </div>
-                </div>
-            </div>
-        </aside>
+        <button onclick="toggleReviewMode()" style="margin-top: 2rem; padding: 1.2rem 2.5rem; background: var(--secondary); color: white; border: none; border-radius: 0.8rem; font-weight: 800; cursor: pointer; width: 100%;">Step-by-Step Review (Correct vs Your Answers)</button>
     </div>
+</div>
 
-    <script>
-        // --- DATA SECTION: Add your questions here ---
-        const questions = [
-            // PHYSICS (Mechanics)
-            {
-                q: "A particle moves in a circle of radius R with constant speed v. The acceleration of the particle is:",
-                options: ["v²/R towards center", "v²/R away from center", "vR towards center", "Zero"],
-                correct: 0
-            },
-            {
-                q: "The dimension of Universal Gravitational Constant (G) is:",
-                options: ["[M⁻¹L³T⁻²]", "[ML²T⁻²]", "[M⁻¹L²T⁻¹]", "[MLT⁻²]"],
-                correct: 0
-            },
-            // MATHEMATICS (Calculus/Algebra)
-            {
-                q: "The value of lim(x→0) [sin(x)/x] is equal to:",
-                options: ["0", "Infinity", "1", "Does not exist"],
-                correct: 2
-            },
-            {
-                q: "If A is a square matrix of order 3 and |A| = 5, then |adj A| is:",
-                options: ["5", "25", "125", "15"],
-                correct: 1
-            },
-            // CHEMISTRY
-            {
-                q: "Which of the following is the strongest acid?",
-                options: ["HCl", "HI", "HBr", "HF"],
-                correct: 1
-            },
-            {
-                q: "The oxidation state of Cr in K₂Cr₂O₇ is:",
-                options: ["+3", "+4", "+5", "+6"],
-                correct: 3
-            },
-            // ENGLISH
-            {
-                q: "Identify the synonym of 'Abstain':",
-                options: ["Indulge", "Refrain", "Accept", "Begin"],
-                correct: 1
-            },
-            {
-                q: "He is ______ honorable man.",
-                options: ["a", "an", "the", "none"],
-                correct: 1
-            }
-            // Tip: Duplicate these blocks to reach 100 questions!
-        ];
+<footer>
+    <p>Success is the sum of small efforts, repeated day in and day out.</p>
+    <p>© 2026 AspireX Education. Reference: <a href="https://codetmc.wordpress.com" target="_blank" style="color: var(--secondary); font-weight: bold;">codetmc.wordpress.com</a></p>
+</footer>
 
-        let currentIdx = 0;
-        let answers = new Array(questions.length).fill(null);
+<script>
+    const questions = [
+        // PHYSICS (13)
+        { cat: "Physics", q: "The angle between two equal vectors such that their resultant is also equal to either of them is:", opts: ["0°", "60°", "90°", "120°"], ans: 3, exp: "Using R² = A² + B² + 2AB cosθ. If R=A=B, then cosθ = -1/2, so θ = 120°." },
+        { cat: "Physics", q: "A body of mass 5kg is moving in a circle of radius 1m with an angular velocity of 2 rad/s. Centripetal force is:", opts: ["10 N", "20 N", "5 N", "40 N"], ans: 1, exp: "F = mω²r = 5 × (2)² × 1 = 20 N." },
+        { cat: "Physics", q: "At what temperature do the Celsius and Fahrenheit scales coincide?", opts: ["40°", "-40°", "0°", "100°"], ans: 1, exp: "Using C/5 = (F-32)/9, setting C=F=x gives x = -40." },
+        { cat: "Physics", q: "The working principle of an optical fiber is:", opts: ["Refraction", "Scattering", "Total Internal Reflection", "Dispersion"], ans: 2, exp: "Optical fibers transmit light using the principle of Total Internal Reflection (TIR)." },
+        { cat: "Physics", q: "The unit of magnetic flux is:", opts: ["Tesla", "Weber", "Henry", "Farad"], ans: 1, exp: "Weber is the SI unit of magnetic flux." },
+        { cat: "Physics", q: "If the distance between two masses is doubled, the gravitational force becomes:", opts: ["Half", "Double", "One-fourth", "Four times"], ans: 2, exp: "F ∝ 1/r². If r is doubled, F becomes 1/2² = 1/4." },
+        { cat: "Physics", q: "Which of the following has the highest frequency?", opts: ["Radio waves", "Infrared", "Gamma rays", "Microwaves"], ans: 2, exp: "Gamma rays have the shortest wavelength and highest frequency." },
+        { cat: "Physics", q: "The energy stored in a capacitor of capacitance C and potential V is:", opts: ["CV", "1/2 CV", "1/2 CV²", "CV²"], ans: 2, exp: "E = ½CV²." },
+        { cat: "Physics", q: "A convex lens is used to correct:", opts: ["Myopia", "Hypermetropia", "Astigmatism", "Presbyopia"], ans: 1, exp: "Hypermetropia (farsightedness) requires a converging convex lens." },
+        { cat: "Physics", q: "The resistance of an ideal ammeter is:", opts: ["Zero", "Infinite", "Very high", "Unitary"], ans: 0, exp: "An ideal ammeter should have zero resistance." },
+        { cat: "Physics", q: "The escape velocity from the Earth's surface is approximately:", opts: ["7.2 km/s", "11.2 km/s", "9.8 km/s", "4.2 km/s"], ans: 1, exp: "v = √(2gR) ≈ 11.2 km/s." },
+        { cat: "Physics", q: "Dimensions of Surface Tension are:", opts: ["[MT⁻²]", "[MLT⁻²]", "[ML²T⁻²]", "[MT⁻¹]"], ans: 0, exp: "Surface Tension = Force/Length = [MLT⁻²]/[L] = [MT⁻²]." },
+        { cat: "Physics", q: "In an adiabatic process, which of the following remains constant?", opts: ["Temperature", "Pressure", "Volume", "Heat content"], ans: 3, exp: "An adiabatic process is one where no heat enters or leaves the system (dQ=0)." },
 
-        function init() {
-            renderPalette();
-            showQuestion();
-            startTimer(3 * 60 * 60); // 3 Hours
-            lucide.createIcons();
-        }
+        // MATH (13)
+        { cat: "Math", q: "If n(A)=15, n(B)=20 and n(A∪B)=30, then n(A∩B) is:", opts: ["5", "10", "15", "35"], ans: 0, exp: "n(A∩B) = n(A) + n(B) - n(A∪B) = 15 + 20 - 30 = 5." },
+        { cat: "Math", q: "The value of i⁴⁰ is:", opts: ["i", "-i", "1", "-1"], ans: 2, exp: "i⁴⁰ = (i⁴)¹⁰ = 1¹⁰ = 1." },
+        { cat: "Math", q: "The derivative of log(sin x) with respect to x is:", opts: ["tan x", "cot x", "sec x", "cosec x"], ans: 1, exp: "d/dx[ln(sin x)] = (1/sin x) * cos x = cot x." },
+        { cat: "Math", q: "The area bounded by y = x, x-axis and lines x=0 to x=2 is:", opts: ["1", "2", "4", "0"], ans: 1, exp: "∫x dx from 0 to 2 is [x²/2] = 4/2 = 2." },
+        { cat: "Math", q: "The value of sin(sin⁻¹ 1/2) is:", opts: ["1", "1/2", "0", "π/6"], ans: 1, exp: "sin(sin⁻¹ x) = x." },
+        { cat: "Math", q: "If a matrix A is 2x3 and B is 3x4, the order of AB is:", opts: ["3x3", "2x4", "4x2", "2x3"], ans: 1, exp: "Resultant order is (rows of first) x (cols of second) = 2x4." },
+        { cat: "Math", q: "The slope of the line parallel to 2x + 3y = 5 is:", opts: ["2/3", "-2/3", "3/2", "-3/2"], ans: 1, exp: "Slope m = -a/b = -2/3." },
+        { cat: "Math", q: "The limit of (sin x)/x as x approaches 0 is:", opts: ["0", "1", "∞", "Undefined"], ans: 1, exp: "This is a fundamental trig limit theorem." },
+        { cat: "Math", q: "The sum of the roots of x² - 5x + 6 = 0 is:", opts: ["5", "-5", "6", "-6"], ans: 0, exp: "Sum of roots = -b/a = -(-5)/1 = 5." },
+        { cat: "Math", q: "The eccentricity of a circle is:", opts: ["1", "0", "Greater than 1", "Less than 1"], ans: 1, exp: "By definition, circle eccentricity is 0." },
+        { cat: "Math", q: "Integration of eˣ dx is:", opts: ["eˣ + c", "xeˣ + c", "eˣ⁺¹ + c", "1/eˣ + c"], ans: 0, exp: "The integral of eˣ is eˣ." },
+        { cat: "Math", q: "The value of 5P2 is:", opts: ["10", "20", "120", "60"], ans: 1, exp: "5P2 = 5! / (5-2)! = 120/6 = 20." },
+        { cat: "Math", q: "The distance between (0,0) and (3,4) is:", opts: ["3", "4", "5", "7"], ans: 2, exp: "√(3² + 4²) = √25 = 5." },
 
-        function renderPalette() {
-            const palette = document.getElementById('question-palette');
-            palette.innerHTML = questions.map((_, i) => `
-                <button onclick="jumpTo(${i})" id="p-${i}" class="size-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold transition-all hover:bg-white/10">
-                    ${(i + 1).toString().padStart(2, '0')}
-                </button>
-            `).join('');
-        }
+        // CHEMISTRY (12)
+        { cat: "Chemistry", q: "The bond angle in a water molecule (H₂O) is:", opts: ["109.5°", "180°", "104.5°", "120°"], ans: 2, exp: "Lone pair repulsion reduces the angle to 104.5°." },
+        { cat: "Chemistry", q: "Which of the following is an alkali metal?", opts: ["Mg", "Ca", "Na", "Al"], ans: 2, exp: "Sodium (Na) is in Group 1." },
+        { cat: "Chemistry", q: "The process of loss of electrons is called:", opts: ["Reduction", "Oxidation", "Hydrogenation", "Substitution"], ans: 1, exp: "Oxidation Is Loss (OIL)." },
+        { cat: "Chemistry", q: "The pH of a 0.01 M HCl solution is:", opts: ["1", "2", "7", "12"], ans: 1, exp: "pH = -log[0.01] = 2." },
+        { cat: "Chemistry", q: "The main constituent of LPG is:", opts: ["Methane", "Butane", "Ethane", "Acetylene"], ans: 1, exp: "LPG is primarily Butane and Propane." },
+        { cat: "Chemistry", q: "Which gas is known as 'Laughing Gas'?", opts: ["NO", "NO₂", "N₂O", "N₂O₅"], ans: 2, exp: "Nitrous Oxide (N₂O)." },
+        { cat: "Chemistry", q: "The hybridisation of Carbon in Methane (CH₄) is:", opts: ["sp", "sp2", "sp3", "dsp2"], ans: 2, exp: "Carbon in Methane forms 4 sigma bonds (sp³)." },
+        { cat: "Chemistry", q: "Which element has the highest electronegativity?", opts: ["Oxygen", "Fluorine", "Chlorine", "Nitrogen"], ans: 1, exp: "Fluorine is the most electronegative element." },
+        { cat: "Chemistry", q: "The functional group of aldehydes is:", opts: ["-OH", "-COOH", "-CHO", "-CO-"], ans: 2, exp: "-CHO is the aldehyde group." },
+        { cat: "Chemistry", q: "An isotope has the same number of:", opts: ["Neutrons", "Protons", "Mass Number", "Nucleons"], ans: 1, exp: "Isotopes have the same atomic number (protons)." },
+        { cat: "Chemistry", q: "Which of the following is a transition element?", opts: ["Sodium", "Calcium", "Iron", "Magnesium"], ans: 2, exp: "Iron (Fe) is a d-block transition element." },
+        { cat: "Chemistry", q: "The gas evolved when Zinc reacts with dil. H₂SO₄ is:", opts: ["O₂", "CO₂", "H₂", "SO₂"], ans: 2, exp: "Zn + H₂SO₄ → ZnSO₄ + H₂." },
 
-        function showQuestion() {
-            const q = questions[currentIdx];
-            document.getElementById('q-number').innerText = `Question ${currentIdx + 1} of ${questions.length}`;
-            document.getElementById('question-text').innerText = q.q;
+        // ENGLISH (12)
+        { cat: "English", q: "Identify the synonym of 'Pinnacle':", opts: ["Base", "Summit", "Valley", "Road"], ans: 1, exp: "Pinnacle means the peak or highest point." },
+        { cat: "English", q: "I have been living here ___ 2010.", opts: ["for", "since", "from", "by"], ans: 1, exp: "'Since' is used for a point in time." },
+        { cat: "English", q: "Change into Passive: 'He plays football.'", opts: ["Football was played by him.", "Football is played by him.", "Football has been played by him.", "Football being played by him."], ans: 1, exp: "Simple present passive: is + V3." },
+        { cat: "English", q: "The antonym of 'Transparent' is:", opts: ["Clear", "Opaque", "Translucent", "Bright"], ans: 1, exp: "Opaque means light cannot pass through." },
+        { cat: "English", q: "One who knows many languages is called:", opts: ["Polyglot", "Polygamist", "Orator", "Ambiguous"], ans: 0, exp: "A polyglot speaks multiple languages." },
+        { cat: "English", q: "Which of the following is correctly spelled?", opts: ["Committee", "Comittee", "Committe", "Comitee"], ans: 0, exp: "Committee has double m, t, and e." },
+        { cat: "English", q: "He is ___ M.A. in English.", opts: ["a", "an", "the", "no article"], ans: 1, exp: "'M' sounds like 'em' (vowel sound), so 'an' is used." },
+        { cat: "English", q: "If I ___ rich, I would help everyone.", opts: ["am", "was", "were", "had"], ans: 2, exp: "Hypothetical 'if' uses 'were' for all subjects." },
+        { cat: "English", q: "The study of birds is called:", opts: ["Biology", "Ornithology", "Zoology", "Anthropology"], ans: 1, exp: "Ornithology is the study of birds." },
+        { cat: "English", q: "He is afraid ___ dogs.", opts: ["with", "of", "from", "at"], ans: 1, exp: "Afraid takes the preposition 'of'." },
+        { cat: "English", q: "Select the correctly punctuated sentence:", opts: ["He said, I am happy.", "He said 'I am happy.'", "He said, \"I am happy.\"", "He said \"I am happy\""], ans: 2, exp: "Proper punctuation for direct speech." },
+        { cat: "English", q: "Part of speech of the underlined word: She sang **beautifully**.", opts: ["Adjective", "Adverb", "Noun", "Verb"], ans: 1, exp: "Beautifully describes the verb 'sang'." }
+    ];
+
+    let currentIdx = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let isReviewMode = false;
+
+    function init() {
+        const grid = document.getElementById('nav-grid');
+        questions.forEach((_, i) => {
+            const btn = document.createElement('div');
+            btn.className = 'nav-dot';
+            btn.innerText = i + 1;
+            btn.id = `nav-${i}`;
+            btn.onclick = () => { currentIdx = i; render(); };
+            grid.appendChild(btn);
+        });
+        render();
+        startTimer();
+    }
+
+    function render() {
+        const q = questions[currentIdx];
+        document.getElementById('category-label').innerText = q.cat;
+        document.getElementById('q-progress').innerText = `Question ${currentIdx + 1}/${questions.length}`;
+        document.getElementById('question-text').innerText = q.q;
+        
+        const area = document.getElementById('options-area');
+        area.innerHTML = '';
+        
+        q.opts.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = `option-btn ${userAnswers[currentIdx] === i ? 'selected' : ''}`;
             
-            // Handle Previous button state
-            document.getElementById('prev-btn').disabled = (currentIdx === 0);
+            if (isReviewMode) {
+                btn.disabled = true;
+                if (i === q.ans) btn.classList.add('correct');
+                if (userAnswers[currentIdx] === i && i !== q.ans) btn.classList.add('wrong');
+            }
             
-            // Handle Next/Submit button text
-            const nextBtn = document.getElementById('next-btn');
-            if (currentIdx === questions.length - 1) {
-                nextBtn.innerHTML = `Finish Test <i data-lucide="check-circle" class="size-4"></i>`;
-                nextBtn.classList.replace('bg-indigo-600', 'bg-green-600');
-            } else {
-                nextBtn.innerHTML = `Save & Next <i data-lucide="chevron-right" class="size-4"></i>`;
-                nextBtn.classList.add('bg-indigo-600');
+            btn.innerHTML = opt;
+            btn.onclick = () => { if(!isReviewMode) selectOption(i); };
+            area.appendChild(btn);
+        });
+
+        if (isReviewMode) {
+            const expDiv = document.createElement('div');
+            expDiv.style = "margin-top:1.5rem; padding:1.2rem; background:#f0f9ff; border-radius:0.8rem; border:1px solid #bae6fd; color:#0369a1;";
+            expDiv.innerHTML = `<strong>Explanation:</strong> ${q.exp}`;
+            area.appendChild(expDiv);
+        }
+
+        document.querySelectorAll('.nav-dot').forEach((d, i) => {
+            d.classList.toggle('current', i === currentIdx);
+            d.classList.toggle('answered', userAnswers[i] !== null);
+        });
+    }
+
+    function selectOption(i) {
+        userAnswers[currentIdx] = i;
+        render();
+    }
+
+    function changeQuestion(dir) {
+        currentIdx = (currentIdx + dir + questions.length) % questions.length;
+        render();
+    }
+
+    function finishExam() {
+        if (!confirm("Confirm submission?")) return;
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('results-screen').style.display = 'block';
+        
+        let score = 0;
+        const stats = {}; 
+        questions.forEach((q, i) => {
+            if (!stats[q.cat]) stats[q.cat] = { correct: 0, total: 0 };
+            stats[q.cat].total++;
+            if (userAnswers[i] === q.ans) {
+                score++;
+                stats[q.cat].correct++;
             }
+        });
 
-            const container = document.getElementById('options-container');
-            container.innerHTML = q.options.map((opt, i) => `
-                <button onclick="selectOption(${i})" class="option-btn group flex items-center gap-4 p-4 md:p-5 rounded-2xl border border-white/5 bg-[#1e293b] hover:border-indigo-500/50 transition-all text-left w-full ${answers[currentIdx] === i ? 'option-selected' : ''}">
-                    <span class="size-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center font-bold group-hover:bg-indigo-600 transition-all text-sm">${String.fromCharCode(65 + i)}</span>
-                    <span class="text-base md:text-lg text-gray-300 group-hover:text-white">${opt}</span>
-                </button>
-            `).join('');
+        document.getElementById('final-score').innerText = `${score}/${questions.length}`;
+        document.getElementById('percentage-label').innerText = `${(score/questions.length * 100).toFixed(1)}% Success Rate`;
+        renderChart(stats);
+        generateFeedback(stats);
+    }
 
-            // Update Palette UI
-            document.querySelectorAll('[id^="p-"]').forEach(el => el.classList.remove('palette-current'));
-            const currentP = document.getElementById(`p-${currentIdx}`);
-            currentP.classList.add('palette-current');
-            
-            // Update Progress Tracking
-            const answeredCount = answers.filter(a => a !== null).length;
-            document.getElementById('progress-text').innerText = `${answeredCount}/${questions.length} Done`;
+    function renderChart(stats) {
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(stats),
+                datasets: [{
+                    data: Object.values(stats).map(s => s.correct),
+                    backgroundColor: ['#d63031', '#004a99', '#22c55e', '#fbbf24'],
+                    borderWidth: 0
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+    }
 
-            lucide.createIcons();
-        }
-
-        function selectOption(i) {
-            answers[currentIdx] = i;
-            document.getElementById(`p-${currentIdx}`).classList.add('palette-answered');
-            showQuestion();
-        }
-
-        function nextQuestion() {
-            if (currentIdx < questions.length - 1) {
-                currentIdx++;
-                showQuestion();
-            } else {
-                finishTest();
+    function generateFeedback(stats) {
+        let lowestCat = "";
+        let minRate = 1.1;
+        for (let cat in stats) {
+            let rate = stats[cat].correct / stats[cat].total;
+            if (rate < minRate) {
+                minRate = rate;
+                lowestCat = cat;
             }
         }
+        document.getElementById('feedback-area').innerHTML = `
+            <h3>Diagnostic Insight</h3>
+            <p>You showed a performance dip in <strong>${lowestCat}</strong>.</p>
+            <p><strong>Recommendation:</strong> Revisit your <em>AspireX Handbooks</em> for ${lowestCat} to boost your rank.</p>
+        `;
+    }
 
-        function prevQuestion() {
-            if (currentIdx > 0) {
-                currentIdx--;
-                showQuestion();
-            }
-        }
+    function toggleReviewMode() {
+        isReviewMode = true;
+        currentIdx = 0;
+        document.getElementById('results-screen').style.display = 'none';
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        render();
+    }
 
-        function jumpTo(i) {
-            currentIdx = i;
-            showQuestion();
-        }
+    function startTimer() {
+        let sec = 60 * 60;
+        const disp = document.getElementById('timer-display');
+        setInterval(() => {
+            let m = Math.floor(sec / 60);
+            let s = sec % 60;
+            disp.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if (sec > 0) sec--;
+        }, 1000);
+    }
 
-        function startTimer(duration) {
-            let timer = duration, hours, minutes, seconds;
-            const timerEl = document.getElementById('timer');
-            const interval = setInterval(() => {
-                hours = parseInt(timer / 3600, 10);
-                minutes = parseInt((timer % 3600) / 60, 10);
-                seconds = parseInt(timer % 60, 10);
-
-                timerEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                if (timer <= 300) timerEl.parentElement.classList.replace('text-orange-400', 'text-red-500'); // Red if < 5 mins
-
-                if (--timer < 0) {
-                    clearInterval(interval);
-                    finishTest();
-                }
-            }, 1000);
-        }
-
-        function finishTest() {
-            const score = calculateScore();
-            alert(`Test Completed!\nYour Score: ${score}/${questions.length}\nReturning to Engineering Portal.`);
-            window.location.href = 'engineering-ioe.html';
-        }
-
-        function calculateScore() {
-            return answers.reduce((total, ans, idx) => {
-                return total + (ans === questions[idx].correct ? 1 : 0);
-            }, 0);
-        }
-
-        window.onload = init;
-    </script>
+    init();
+</script>
 </body>
 </html>
