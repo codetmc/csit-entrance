@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CodeTMC Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        background: '#0f172a',
+                        card: '#1e293b',
+                        sidebar: '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-white flex h-screen overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-sidebar border-r border-white/5 flex flex-col shrink-0">
+        <div class="p-6">
+            <div class="flex items-center gap-2 mb-10">
+                <div class="bg-primary p-1.5 rounded-lg">
+                    <i data-lucide="graduation-cap" class="size-5 text-white"></i>
+                </div>
+                <span class="font-bold text-lg">CodeTMC</span>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-medium">
+                    <i data-lucide="layout-dashboard" class="size-5"></i> Dashboard
+                </a>
+                <a href="materials.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+                    <i data-lucide="book-open" class="size-5"></i> My Courses
+                </a>
+                <a href="quizzes.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+                    <i data-lucide="file-text" class="size-5"></i> Mock Tests
+                </a>
+              
+            </nav>
+        </div>
+
+        <div class="mt-auto p-6 border-t border-white/5">
+            <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all">
+                <i data-lucide="log-out" class="size-5"></i> Back to Home
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-background p-8">
+        <!-- Top Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold">Welcome back, Student! 👋</h1>
+                <p class="text-gray-400 text-sm">Here's what's happening with your preparation today.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="p-2 bg-card border border-white/10 rounded-lg relative">
+                    <i data-lucide="bell" class="size-5"></i>
+                    <span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="size-10 rounded-full bg-primary flex items-center justify-center font-bold">
+                    S
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid (From Screenshot 212353) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-card p-6 rounded-2xl border border-white/5">
+                <div class="flex items-center justify-between mb-4">
+                    <p class="text-gray-400 text-sm">Overall Progress</p>
+                    <i data-lucide="trending-up" class="size-5 text-green-400"></i>
+                </div>
+                <h2 class="text-3xl font-bold">78%</h2>
+                <div class="w-full bg-white/5 h-2 rounded-full mt-4">
+                    <div class="bg-primary h-full rounded-full" style="width: 78%"></div>
+                </div>
+            </div>
+
+            <div class="bg-card p-6 rounded-2xl border border-white/5">
+                <div class="flex items-center justify-between mb-4">
+                    <p class="text-gray-400 text-sm">Quizzes Completed</p>
+                    <i data-lucide="award" class="size-5 text-yellow-400"></i>
+                </div>
+                <h2 class="text-3xl font-bold">124</h2>
+                <p class="text-xs text-gray-500 mt-4">+12 since last week</p>
+            </div>
+
+            <div class="bg-card p-6 rounded-2xl border border-white/5">
+                <div class="flex items-center justify-between mb-4">
+                    <p class="text-gray-400 text-sm">Study Streak</p>
+                    <i data-lucide="flame" class="size-5 text-orange-500"></i>
+                </div>
+                <h2 class="text-3xl font-bold">15 Days</h2>
+                <p class="text-xs text-gray-500 mt-4">Personal record: 22 days</p>
+            </div>
+        </div>
+
+        <!-- Continue Learning Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold">Continue Learning</h3>
+                <div class="bg-card p-4 rounded-xl border border-white/5 flex items-center gap-4 hover:border-primary/50 transition-all cursor-pointer">
+                    <div class="size-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <i data-lucide="atom" class="text-blue-400"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-medium">Organic Chemistry II</h4>
+                        <p class="text-xs text-gray-400">35/50 Lessons Completed</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-600"></i>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold">Upcoming Mock Tests</h3>
+                <div class="bg-card p-4 rounded-xl border border-white/5 border-l-4 border-l-yellow-500">
+                    <p class="text-xs text-yellow-500 font-bold mb-1">TOMORROW • 10:00 AM</p>
+                    <h4 class="font-medium">Full Syllabus IOE Practice Test #4</h4>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

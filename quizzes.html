@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Engine - CodeTMC Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        background: '#0f172a',
+                        card: '#1e293b',
+                        sidebar: '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-white flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-sidebar border-r border-white/5 flex flex-col shrink-0">
+        <div class="p-6">
+            <div class="flex items-center gap-2 mb-10">
+                <div class="bg-primary p-1.5 rounded-lg">
+                    <i data-lucide="graduation-cap" class="size-5 text-white"></i>
+                </div>
+                <span class="font-bold text-lg">CodeTMC</span>
+            </div>
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+                    <i data-lucide="layout-dashboard" class="size-5"></i> Dashboard
+                </a>
+                <a href="quiz-home.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-medium">
+                    <i data-lucide="layers" class="size-5"></i> Quizzes
+                </a>
+                <a href="materials.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+                    <i data-lucide="file-text" class="size-5"></i> Study Materials
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-8">
+        <!-- Header with Search -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold">Quiz Engine</h1>
+                <p class="text-gray-400">Practice makes perfect. Choose a test to begin.</p>
+            </div>
+            <div class="flex gap-2 w-full md:w-auto">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="absolute left-3 top-2.5 size-4 text-gray-500"></i>
+                    <input type="text" placeholder="Search quizzes..." class="bg-card border border-white/10 rounded-lg py-2 pl-10 pr-4 text-sm w-full md:w-64 focus:outline-none focus:border-primary">
+                </div>
+                <button class="bg-card border border-white/10 p-2 rounded-lg hover:border-primary transition-colors">
+                    <i data-lucide="filter" class="size-5 text-gray-400"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Category Pills -->
+        <div class="flex gap-2 mb-10 overflow-x-auto pb-2">
+            <button class="bg-primary px-5 py-1.5 rounded-full text-sm font-medium">All</button>
+            <button class="bg-card border border-white/10 px-5 py-1.5 rounded-full text-sm font-medium hover:border-primary">IOE</button>
+            <button class="bg-card border border-white/10 px-5 py-1.5 rounded-full text-sm font-medium hover:border-primary">CEE</button>
+            <button class="bg-card border border-white/10 px-5 py-1.5 rounded-full text-sm font-medium hover:border-primary">CSIT</button>
+            <button class="bg-card border border-white/10 px-5 py-1.5 rounded-full text-sm font-medium hover:border-primary">Loksewa</button>
+            <button class="bg-card border border-white/10 px-5 py-1.5 rounded-full text-sm font-medium hover:border-primary">NEB</button>
+        </div>
+
+        <!-- Recommended: Daily Challenge (from Screenshot 094632) -->
+        <div class="bg-gradient-to-r from-primary/20 to-card border border-primary/30 p-8 rounded-3xl mb-12 relative overflow-hidden group">
+            <div class="relative z-10 space-y-4 max-w-xl">
+                <span class="bg-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Recommended</span>
+                <h2 class="text-4xl font-bold">Daily Entrance Challenge</h2>
+                <p class="text-gray-400">Compete with 5,000+ students today. 5 mixed questions from Math, Physics, and Chemistry.</p>
+                <div class="flex flex-wrap gap-6 text-sm font-medium pt-2">
+                    <div class="flex items-center gap-2"><i data-lucide="clock" class="size-4 text-primary"></i> 10 Minutes</div>
+                    <div class="flex items-center gap-2"><i data-lucide="bar-chart" class="size-4 text-primary"></i> Difficulty: Adaptive</div>
+                    <div class="flex items-center gap-2"><i data-lucide="trophy" class="size-4 text-primary"></i> 500 XP Reward</div>
+                </div>
+                <button class="bg-primary hover:bg-primary/90 px-8 py-3 rounded-xl font-bold transition-all transform group-hover:scale-105">
+                    Start Challenge
+                </button>
+            </div>
+            <i data-lucide="trophy" class="absolute -right-10 -bottom-10 size-64 text-white/5 rotate-12"></i>
+        </div>
+
+        <!-- Quiz Grid (from Screenshot 094642) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Card: Full IOE Mock -->
+            <div class="bg-card border border-white/5 p-6 rounded-2xl flex flex-col hover:border-primary/50 transition-all">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="text-[10px] font-bold bg-blue-500/10 text-blue-400 px-2 py-1 rounded uppercase">IOE</span>
+                    <span class="text-[10px] font-bold bg-red-500/10 text-red-400 px-2 py-1 rounded uppercase">Expert</span>
+                </div>
+                <h3 class="text-xl font-bold mb-4">Full IOE Mock Test #1</h3>
+                <div class="flex gap-4 text-xs text-gray-400 mb-8">
+                    <div class="flex items-center gap-1"><i data-lucide="book-open" class="size-3"></i> 100 Qs</div>
+                    <div class="flex items-center gap-1"><i data-lucide="timer" class="size-3"></i> 3h</div>
+                </div>
+                <a href="ioe-quiz.html" class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-center font-bold text-sm hover:bg-white/10 transition-all mt-auto">
+                    Take Quiz
+                </a>
+            </div>
+
+            <!-- Card: Physics Optics -->
+            <div class="bg-card border border-white/5 p-6 rounded-2xl flex flex-col hover:border-primary/50 transition-all">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="text-[10px] font-bold bg-blue-500/10 text-blue-400 px-2 py-1 rounded uppercase">IOE</span>
+                    <span class="text-[10px] font-bold bg-blue-500/10 text-blue-400 px-2 py-1 rounded uppercase">Medium</span>
+                </div>
+                <h3 class="text-xl font-bold mb-4">Physics: Optics & Sound</h3>
+                <div class="flex gap-4 text-xs text-gray-400 mb-8">
+                    <div class="flex items-center gap-1"><i data-lucide="book-open" class="size-3"></i> 25 Qs</div>
+                    <div class="flex items-center gap-1"><i data-lucide="timer" class="size-3"></i> 45m</div>
+                </div>
+                <a href="quizzes.html" class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-center font-bold text-sm hover:bg-white/10 transition-all mt-auto">
+                    Take Quiz
+                </a>
+            </div>
+
+            <!-- Card: Medical Entrance -->
+            <div class="bg-card border border-white/5 p-6 rounded-2xl flex flex-col hover:border-primary/50 transition-all">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="text-[10px] font-bold bg-red-500/10 text-red-400 px-2 py-1 rounded uppercase">CEE</span>
+                    <span class="text-[10px] font-bold bg-orange-500/10 text-orange-400 px-2 py-1 rounded uppercase">Hard</span>
+                </div>
+                <h3 class="text-xl font-bold mb-4">Medical Entrance: Bio Mock</h3>
+                <div class="flex gap-4 text-xs text-gray-400 mb-8">
+                    <div class="flex items-center gap-1"><i data-lucide="book-open" class="size-3"></i> 50 Qs</div>
+                    <div class="flex items-center gap-1"><i data-lucide="timer" class="size-3"></i> 90m</div>
+                </div>
+                <a href="quizzes.html" class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-center font-bold text-sm hover:bg-white/10 transition-all mt-auto">
+                    Take Quiz
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

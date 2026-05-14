@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical (CEE) Preparation - CodeTMC Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        medical: '#ef4444', // Red accent for Medical
+                        background: '#0f172a',
+                        card: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-white min-h-screen">
+
+    <!-- Header -->
+    <nav class="border-b border-white/10 px-8 py-4 flex items-center justify-between sticky top-0 bg-background/80 backdrop-blur-md z-50">
+        <div class="flex items-center gap-2">
+            <a href="index.html" class="bg-medical p-1.5 rounded-lg">
+                <i data-lucide="graduation-cap" class="size-5 text-white"></i>
+            </a>
+            <span class="font-bold text-lg">Medical Portal</span>
+        </div>
+        <a href="quizzes.html" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Back to All Exams</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="py-16 px-8 border-b border-white/5 bg-gradient-to-b from-medical/10 to-transparent">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-center">
+            <div class="flex-1 space-y-6">
+                <div class="inline-flex items-center gap-2 bg-medical/20 text-medical px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                    Target CEE 2026
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold">Master the <span class="text-medical">CEE</span> Entrance.</h1>
+                <p class="text-gray-400 text-lg leading-relaxed">
+                    Access comprehensive Biology, Chemistry, Physics, and MAT resources specifically curated for the Medical Common Entrance Examination in Nepal.
+                </p>
+                <div class="flex gap-4">
+                    <button class="bg-medical hover:bg-medical/90 px-8 py-3 rounded-xl font-bold transition-all">Start Free Mock Test</button>
+                    <button class="border border-white/10 hover:bg-white/5 px-8 py-3 rounded-xl font-bold transition-all">Download Syllabus</button>
+                </div>
+            </div>
+            <div class="size-64 bg-medical/20 rounded-full blur-[80px] absolute -z-10 top-20 right-20"></div>
+        </div>
+    </section>
+
+    <!-- Content Grid -->
+    <main class="max-w-7xl mx-auto p-8 lg:p-12">
+        <div class="grid lg:grid-cols-3 gap-12">
+            
+            <!-- Left: Quick Stats/Info -->
+            <div class="lg:col-span-1 space-y-8">
+                <div class="bg-card border border-white/5 p-6 rounded-2xl">
+                    <h3 class="font-bold mb-4 flex items-center gap-2">
+                        <i data-lucide="info" class="size-4 text-medical"></i> Exam Pattern
+                    </h3>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li class="flex justify-between"><span>Biology</span> <span class="text-white font-bold">80 Marks</span></li>
+                        <li class="flex justify-between"><span>Chemistry</span> <span class="text-white font-bold">50 Marks</span></li>
+                        <li class="flex justify-between"><span>Physics</span> <span class="text-white font-bold">50 Marks</span></li>
+                        <li class="flex justify-between"><span>MAT</span> <span class="text-white font-bold">20 Marks</span></li>
+                    </ul>
+                </div>
+
+                <div class="bg-medical/5 border border-medical/20 p-6 rounded-2xl">
+                    <h3 class="font-bold mb-2">Preparation Tip</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed italic">
+                        "Focus 60% of your time on Biology and Chemistry as they carry the highest weightage for CEE."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right: Recommended Quizzes (Similar to Screenshot 094642) -->
+            <div class="lg:col-span-2 space-y-6">
+                <h2 class="text-2xl font-bold">Available Mock Tests</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    
+                    <!-- Card 1 -->
+                    <div class="bg-card border border-white/5 p-6 rounded-2xl hover:border-medical/50 transition-all flex flex-col">
+                        <div class="flex justify-between mb-4">
+                             <span class="text-[10px] font-bold bg-medical/10 text-medical px-2 py-1 rounded uppercase">Botany</span>
+                             <span class="text-gray-500 text-xs italic font-medium">Updated 2 days ago</span>
+                        </div>
+                        <h4 class="text-lg font-bold mb-4">Botany: Genetics Quiz</h4>
+                        <div class="flex gap-4 text-xs text-gray-400 mb-6">
+                            <div class="flex items-center gap-1"><i data-lucide="book-open" class="size-3"></i> 40 Qs</div>
+                            <div class="flex items-center gap-1"><i data-lucide="timer" class="size-3"></i> 60m</div>
+                        </div>
+                        <a href="cee-quiz.html" class="w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-center font-bold text-sm hover:bg-medical/10 hover:border-medical/50 transition-all">Take Quiz</a>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-card border border-white/5 p-6 rounded-2xl hover:border-medical/50 transition-all flex flex-col">
+                        <div class="flex justify-between mb-4">
+                             <span class="text-[10px] font-bold bg-medical/10 text-medical px-2 py-1 rounded uppercase">Full Mock</span>
+                             <span class="text-gray-500 text-xs italic font-medium">New</span>
+                        </div>
+                        <h4 class="text-lg font-bold mb-4">Medical Entrance: Bio Mock</h4>
+                        <div class="flex gap-4 text-xs text-gray-400 mb-6">
+                            <div class="flex items-center gap-1"><i data-lucide="book-open" class="size-3"></i> 50 Qs</div>
+                            <div class="flex items-center gap-1"><i data-lucide="timer" class="size-3"></i> 90m</div>
+                        </div>
+                        <a href="cee-quiz.html" class="w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-center font-bold text-sm hover:bg-medical/10 hover:border-medical/50 transition-all">Take Quiz</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

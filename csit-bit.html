@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSIT/BIT Preparation - CodeTMC Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        csit: '#22c55e', // Green accent for CSIT/BIT
+                        background: '#0f172a',
+                        card: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-white min-h-screen">
+
+    <!-- Header -->
+    <nav class="border-b border-white/10 px-8 py-4 flex items-center justify-between sticky top-0 bg-background/80 backdrop-blur-md z-50">
+        <div class="flex items-center gap-2">
+            <a href="index.html" class="bg-csit p-1.5 rounded-lg">
+                <i data-lucide="graduation-cap" class="size-5 text-white"></i>
+            </a>
+            <span class="font-bold text-lg text-csit">IT Portal</span>
+        </div>
+        <a href="quizzes.html" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Back to All Exams</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="py-16 px-8 border-b border-white/5 bg-gradient-to-b from-csit/10 to-transparent relative">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-center">
+            <div class="flex-1 space-y-6">
+                <div class="inline-flex items-center gap-2 bg-csit/20 text-csit px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                    CSIT/BIT Entrance 2026
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+                    Your Path to <span class="text-csit">Tech Excellence.</span>
+                </h1>
+                <p class="text-gray-400 text-lg leading-relaxed">
+                    Specially designed materials for computer science aspirants. Focus on Mathematics, English, Physics, and Chemistry to secure your seat in top IT colleges.
+                </p>
+                <div class="flex gap-4">
+                    <button class="bg-csit hover:bg-csit/90 px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-csit/20">Take CSIT Mock</button>
+                    <button class="border border-white/10 hover:bg-white/5 px-8 py-3 rounded-xl font-bold transition-all">Syllabus Guide</button>
+                </div>
+            </div>
+            <div class="size-64 bg-csit/20 rounded-full blur-[80px] absolute -z-10 top-20 right-20"></div>
+        </div>
+    </section>
+
+    <!-- Content Grid -->
+    <main class="max-w-7xl mx-auto p-8 lg:p-12">
+        <div class="grid lg:grid-cols-3 gap-12">
+            
+            <!-- Left: Info Panel -->
+            <div class="lg:col-span-1 space-y-8">
+                <div class="bg-card border border-white/5 p-6 rounded-2xl">
+                    <h3 class="font-bold mb-4 flex items-center gap-2 text-csit">
+                        <i data-lucide="cpu" class="size-4"></i> CSIT Entrance Pattern
+                    </h3>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li class="flex justify-between"><span>Mathematics</span> <span class="text-white font-bold">25 Marks</span></li>
+                        <li class="flex justify-between"><span>Physics</span> <span class="text-white font-bold">25 Marks</span></li>
+                        <li class="flex justify-between"><span>Chemistry</span> <span class="text-white font-bold">25 Marks</span></li>
+                        <li class="flex justify-between"><span>English</span> <span class="text-white font-bold">25 Marks</span></li>
+                    </ul>
+                    <div class="mt-6 pt-6 border-t border-white/5">
+                        <p class="text-xs text-gray-500">Total Questions: 100 | Time: 2 Hours</p>
+                    </div>
+                </div>
+
+                <div class="bg-csit/5 border border-csit/20 p-6 rounded-2xl">
+                    <h3 class="font-bold mb-2 flex items-center gap-2">
+                        <i data-lucide="code" class="size-4 text-csit"></i> Pro Tip
+                    </h3>
+                    <p class="text-sm text-gray-400 leading-relaxed italic">
+                        "Don't ignore English. It's often the deciding factor in CSIT rankings. Practice comprehension and grammar daily."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right: Quiz Grid -->
+            <div class="lg:col-span-2 space-y-6">
+                <h2 class="text-2xl font-bold">IT Specialized Quizzes</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    
+                    <!-- Card 1 (Referencing Screenshot 094642) -->
+                    <div class="bg-card border border-white/5 p-6 rounded-2xl hover:border-csit/50 transition-all flex flex-col group">
+                        <div class="flex justify-between mb-4">
+                             <span class="text-[10px] font-bold bg-csit/10 text-csit px-2 py-1 rounded uppercase">CSIT</span>
+                             <span class="text-[10px] font-bold bg-green-500/10 text-green-400 px-2 py-1 rounded uppercase">Easy</span>
+                        </div>
+                        <h4 class="text-lg font-bold mb-4 group-hover:text-csit transition-colors">CSIT Quiz 1</h4>
+                        <div class="flex gap-4 text-xs text-gray-400 mb-6">
+                            <div class="flex items-center gap-1"><i data-lucide="book-open" class="size-3"></i> 50 Qs</div>
+                            <div class="flex items-center gap-1"><i data-lucide="timer" class="size-3"></i> 60m</div>
+                        </div>
+                        <a href="csitquiz-1.html" class="w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-center font-bold text-sm hover:bg-csit/10 hover:border-csit/50 transition-all">Take Quiz</a>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-card border border-white/5 p-6 rounded-2xl hover:border-csit/50 transition-all flex flex-col group">
+                        <div class="flex justify-between mb-4">
+                             <span class="text-[10px] font-bold bg-csit/10 text-csit px-2 py-1 rounded uppercase">Full Mock</span>
+                             <span class="text-[10px] font-bold bg-orange-500/10 text-orange-400 px-2 py-1 rounded uppercase">Hard</span>
+                        </div>
+                        <h4 class="text-lg font-bold mb-4 group-hover:text-csit transition-colors">BIT Entrance Mock #1</h4>
+                        <div class="flex gap-4 text-xs text-gray-400 mb-6">
+                            <div class="flex items-center gap-1"><i data-lucide="book-open" class="size-3"></i> 100 Qs</div>
+                            <div class="flex items-center gap-1"><i data-lucide="timer" class="size-3"></i> 2h</div>
+                        </div>
+                        <a href="quizzes.html" class="w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-center font-bold text-sm hover:bg-csit/10 hover:border-csit/50 transition-all">Take Quiz</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
